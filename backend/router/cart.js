@@ -32,7 +32,7 @@ router.post("/", authCheck, async (req, res) => {
                 }
             );
 
-            res.status(200).json({ message: "Product quantity updated in cart!" });
+            res.status(200).json({ message: "Product quantity updated in cart!" });// git
         } else {
             // Add new product to cart
             const newProduct = new Cart({

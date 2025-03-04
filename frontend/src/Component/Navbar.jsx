@@ -1,38 +1,29 @@
-
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { FaShoppingCart } from "react-icons/fa";
-import { ToastContainer } from "react-toastify";
-import { successMessage, errorMessage } from "./ToastMessage";
+import { Box, Flex, Button, Text, IconButton, Badge, Spinner, HStack, VStack, Spacer } from "@chakra-ui/react";
+import { FaShoppingCart, FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import Authverify from "./Authverify";
+import { successMessage } from "./ToastMessage";
 
-// Define the refresh function outside the component so it can be exported
 let refreshCartCountFunction = null;
 
 export default function Navbar() {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigate = useNavigate();
     const [cartCount, setCartCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
 
-    // Define the refresh function
     const refreshCartCount = async () => {
         const userData = await Authverify();
-        if (!userData) {
-            return;
-        }
+        if (!userData) return;
 
         const token = localStorage.getItem("token");
+        if (!token) return;
 
-        if (!token) {
-            return;
-        }
-        
         setIsLoading(true);
-        
+
         try {
             const response = await fetch("http://localhost:8000/cart", {
                 method: "GET",
@@ -53,11 +44,9 @@ export default function Navbar() {
             setIsLoading(false);
         }
     };
-  
-    // Store the function in the outer variable so it can be exported
+
     useEffect(() => {
         refreshCartCountFunction = refreshCartCount;
-        // Initial load
         refreshCartCount();
     }, []);
 
@@ -89,68 +78,57 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
-            <div className="container">
-                <Link className="navbar-brand fw-bold fs-4" to="/">
+        <Box bg="gray.100" px={4} py={3} shadow="md">
+            <Flex alignItems="center" maxW="container.lg" mx="auto">
+                <Text fontSize="xl" fontWeight="bold" color="blue.600" cursor="pointer" onClick={() => navigate("/")}>
                     🛒 MyStore
-                </Link>
+                </Text>
+                <Spacer />
+                
+                {/* Desktop Menu */}
+                <HStack spacing={6} display={{ base: "none", md: "flex" }}>
+                    <Button color={"gray.800"} variant="ghost" onClick={() => navigate("/")}>Home</Button>
+                    <Button color={"gray.800"} variant="ghost" onClick={() => navigate("/products")}>Products</Button>
+                    <Button color={"gray.800"} variant="ghost" onClick={() => navigate("/contact")}>Contact</Button>
+                </HStack>
+                
+                <Spacer />
 
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/">Home</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/products">Products</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/contact">Contact</Link>
-                        </li>
-
-                        {isLoggedIn && user && (
-                            <li className="nav-item">
-                                <span className="nav-link text-danger">Welcome, {user} 😊</span>
-                            </li>
-                        )}
-                    </ul>
-
-                    <Link to="/cart" className="btn btn-outline-primary">
-                        <FaShoppingCart /> Cart
-                        {isLoggedIn ? (
-                            <span className="badge bg-danger ms-2">
-                                {isLoading ? (
-                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                ) : (
-                                    cartCount
-                                )}
-                            </span>
-                        ) : (
-                            <span className="badge bg-danger ms-2"></span>
-                        )}
-                    </Link>
-
+                <HStack spacing={4} display={{ base: "none", md: "flex" }}>
+                    <Button leftIcon={<FaShoppingCart />} colorScheme="blue" onClick={() => navigate("/cart")}>
+                        Cart
+                        <Badge ml={2} colorScheme="red">{isLoading ? <Spinner size="xs" /> : cartCount}</Badge>
+                    </Button>
                     {isLoggedIn ? (
-                        <button className="btn btn-outline-danger ms-3" onClick={handleLogout}>
-                            Logout
-                        </button>
+                        <Button leftIcon={<FaUserCircle />} onClick={handleLogout}>Logout</Button>
                     ) : (
-                        <Link to="/login" className="btn btn-outline-primary ms-3">Login</Link>
+                        <Button colorScheme="green" onClick={() => navigate("/login")}>Login</Button>
                     )}
-                </div>
-            </div>
-        </nav>
+                </HStack>
+
+                {/* Mobile Menu Toggle Button */}
+                <IconButton
+                    icon={isMenuOpen ? <FaTimes /> : <FaBars />}
+                    display={{ base: "flex", md: "none" }}
+                    variant="ghost"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                />
+            </Flex>
+
+            {/* Mobile Menu (Collapsible) */}
+            {isMenuOpen && (
+                <VStack spacing={4} mt={4} align="start" bg="white" px={4} py={3} shadow="md" borderRadius="md">
+                    <Button variant="ghost" onClick={() => { navigate("/"); setIsMenuOpen(false); }}>Home</Button>
+                    <Button variant="ghost" onClick={() => { navigate("/products"); setIsMenuOpen(false); }}>Products</Button>
+                    <Button variant="ghost" onClick={() => { navigate("/contact"); setIsMenuOpen(false); }}>Contact</Button>
+                    {isLoggedIn ? (
+                        <Button colorScheme="red" onClick={() => { handleLogout(); setIsMenuOpen(false); }}>Logout</Button>
+                    ) : (
+                        <Button colorScheme="green" onClick={() => { navigate("/login"); setIsMenuOpen(false); }}>Login</Button>
+                    )}
+                </VStack>
+            )}
+        </Box>
     );
 }
 

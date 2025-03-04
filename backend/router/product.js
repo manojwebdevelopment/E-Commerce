@@ -51,6 +51,21 @@ router.get("/", async(req,res)=>{
         return res.status(500).json({message:"Internal server error", success:false});
     }
 })
+router.get("/:productid", async (req, res) => {
+    try {
+        const productId = req.params.productid; 
+        const product = await Product.findOne({ productId });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found", success: false });
+        }
+
+        return res.status(200).json({ product, success: true });
+    } catch (error) {
+        return res.status(500).json({ message: "Internal server error", success: false });
+    }
+});
+
 
 
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Authverify from "../Component/Authverify";
 import { successMessage, errorMessage } from "../Component/ToastMessage";
 import { ToastContainer } from "react-toastify";
+import { refreshNavbarCart } from "../Component/Navbar"; // Import directly from Navbar
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
@@ -67,6 +68,7 @@ export default function CartPage() {
             if (response.ok) {
                 setCart(cart.filter((item) => item.productId !== productId));
                 successMessage("Product removed from cart!");
+                  await refreshNavbarCart();
             } else {
                 const result = await response.json();
                 errorMessage(result.message);

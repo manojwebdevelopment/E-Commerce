@@ -197,7 +197,7 @@ export default function ProductCard() {
         setProducts(jsonData.products);
       }
     } catch (error) {
-      toaster.error({title:"No Products Found"});
+      toaster.error({ title: "No Products Found" });
     }
   };
 
@@ -205,40 +205,40 @@ export default function ProductCard() {
     getProducts();
   }, []);
 
-  
+
 
   return (
     <Box maxW="container.xl" mx="auto" p={5}>
-    {loading && (
-      <Flex position="fixed" top={0} left={0} w="100vw" h="100vh" align="center" justify="center" bg="rgba(255,255,255,0.7)" zIndex={1050}>
-        <Spinner size="xl" color="blue.500" />
-      </Flex>
-    )}
-    <Heading textAlign="center" mb={6}>Our Products</Heading>
-    <Flex wrap="wrap" justify="center" gap={4}>
-      {products.map((product) => (
-        <Box key={product.productId} p={1} boxShadow="lg" borderRadius="lg" borderWidth="1px" maxW="300px" bg="white" overflow="hidden" _hover={{transform: "scale(1.03)"}} transition="all 0.3s ease-in-out">
-          <Image src={`http://localhost:8000/uploads/${product.productImage}`} alt={product.productName} h="250px" objectFit="contain" borderRadius="md" mb={0} />
-          <Box p={1}>
-            <Text fontSize="lg" fontWeight="bold" color="gray.800" noOfLines={1} cursor="pointer" onClick={() => navigate(`/product/${product.productId}`)}>
-              {product.productName}
-            </Text>
-            <Text fontSize="sm" color="gray.500" noOfLines={2}>{product.productDescription.substring(0, 80)}...</Text>
-            <Text fontSize="xl" fontWeight="bold" color="red.500">₹{product.productPrice}</Text>
-            <HStack justify="start" my={2}>
-              {Array.from({ length: 5 }, (_, i) => (
-                <FaStar key={i} color={i < (product.productRating || 0) ? "gold" : "lightgray"} />
-              ))}
-            </HStack>
-            <HStack mt={3} spacing={2} justify="space-between">
-              <Button leftIcon={<FaShoppingCart />} bg="yellow.400" color="black.400" borderRadius="md" _hover={{ bg: "yellow.500" }} size="sm" onClick={() => addToCart(product)}>Add to Cart</Button>
-              <Button rightIcon={<RiArrowRightLine />}  bg="orange.600" _hover={{bg:"orange.500"}} borderRadius="md" size="sm">Buy Now</Button>
-            </HStack>
+      {loading && (
+        <Flex position="fixed" top={0} left={0} w="100vw" h="100vh" align="center" justify="center" bg="rgba(255,255,255,0.7)" zIndex={1050}>
+          <Spinner size="xl" color="blue.500" />
+        </Flex>
+      )}
+      <Heading textAlign="center" mb={6}>Our Products</Heading>
+      <Flex wrap="wrap" justify="center" gap={4}>
+        {products.map((product) => (
+          <Box key={product.productId} p={1} boxShadow="lg" borderRadius="lg" borderWidth="1px" maxW="300px" bg="white" overflow="hidden" _hover={{ transform: "scale(1.03)" }} transition="all 0.3s ease-in-out">
+            <Image src={`http://localhost:8000/uploads/${product.productImage}`} alt={product.productName} h="250px" objectFit="contain" borderRadius="md" mb={0} />
+            <Box p={1}>
+              <Text fontSize="lg" fontWeight="bold" color="gray.800" noOfLines={1} cursor="pointer" onClick={() => navigate(`/product/${product.productId}`)}>
+                {product.productName}
+              </Text>
+              <Text fontSize="sm" color="gray.500" noOfLines={2}>{product.productDescription.substring(0, 80)}...</Text>
+              <Text fontSize="xl" fontWeight="bold" color="red.500">₹{product.productPrice}</Text>
+              <HStack justify="start" my={2}>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <FaStar key={i} color={i < (product.productRating || 0) ? "gold" : "lightgray"} />
+                ))}
+              </HStack>
+              <HStack mt={3} spacing={2} justify="space-between">
+                <Button leftIcon={<FaShoppingCart />} bg="yellow.400" color="black.400" borderRadius="md" _hover={{ bg: "yellow.500" }} size="sm" onClick={() => addToCart(product)}>Add to Cart</Button>
+                <Button rightIcon={<RiArrowRightLine />} bg="orange.600" _hover={{ bg: "orange.500" }} borderRadius="md" size="sm">Buy Now</Button>
+              </HStack>
+            </Box>
           </Box>
-        </Box>
-      ))}
-    </Flex>
-    <Toaster />
-  </Box>
+        ))}
+      </Flex>
+      <Toaster />
+    </Box>
   );
 }

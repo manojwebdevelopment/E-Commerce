@@ -1,6 +1,7 @@
 import { Toaster, toaster } from "@/components/ui/toaster";
 import { refreshNavbarCart } from "./Navbar"; // Import directly from Navbar
 import Authverify from "./Authverify";
+
 export const addToCart = async (product) => {
    
     const userData = await Authverify();

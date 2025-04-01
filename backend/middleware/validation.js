@@ -4,6 +4,7 @@ const joi = require("joi");
 const signupValidation = (req,res,next)=>{
     const Schema = joi.object({
         name: joi.string().min(3).max(20).required(),
+        phoneNumber:joi.string().min(10).max(10).required(),
         email:joi.string().min(6).max(50),
         password:joi.string().min(4).max(20)
     });

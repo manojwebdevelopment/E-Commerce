@@ -8,10 +8,9 @@ const router = express.Router();
 
 router.post("/signup", signupValidation, async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-
-       
-        if (!name || !email || !password) {
+        const { name, phoneNumber, email, password } = req.body;
+        console.log(req.body);
+        if (!name || !phoneNumber || !email || !password) {
             return res.status(400).json({ message: "All fields are required", success: false });
         }
 
@@ -24,7 +23,7 @@ router.post("/signup", signupValidation, async (req, res) => {
      
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({ name, email, password: hashedPassword });
+        const newUser = new User({ name, phoneNumber, email, password: hashedPassword });
 
         
         await newUser.save();

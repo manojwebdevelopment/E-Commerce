@@ -1,27 +1,37 @@
-import { Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import Navbar from './Component/Navbar';
-import ProductCard from './Pages/ProductCard';
-import ProductDetails from './Pages/ProductDetails';
-import Cart from './Pages/Cart';
-import Signup from './Pages/Signup';
-import Login from './Pages/Login';
-
+import Navbar from './Components/Navbar'
+import MensProducts from './Pages/MensProducts'
+import Home from './Pages/Home'
+import LoginPage from './Pages/LoginPage'
+import SignUpPage from './Pages/SignupPage'
+import ProtectedRoute from './Utils/ProtectedRoute'
+import AuthCheck from './Utils/AuthCheck'
 
 function App() {
 
 
   return (
-    <>  
-    
-    <Navbar/>
-    <Routes>
-      <Route path='/' element={<ProductCard/>}/>
-      <Route path='/product/:id' element={<ProductDetails/>}/>
-      <Route path='/cart' element={<Cart/>}/>
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+
+          <Route path='/mens' element={<MensProducts />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/signup' element={<SignUpPage />} />
+          {/* <Route path='/about' element={<About/>}/>
+      <Route path='/contact' element={<Contact/>}/> */}
+          <Route path='/' element={
+            <ProtectedRoute>
+              <AuthCheck>
+                <Home />
+              </AuthCheck>
+            </ProtectedRoute>
+          } />
+
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
